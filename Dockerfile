@@ -1,46 +1,27 @@
-# Use PHP 8.1 with FPM
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
-# Set working directory
+# Работна директория
 WORKDIR /var/www
 
-# Install necessary PHP extensions
+# Инсталираме само нужното
 RUN apt-get update && apt-get install -y \
-    curl \
-    zip \
-    unzip \
     git \
-    libpq-dev \
-    libonig-dev \
-    libzip-dev \
-    libssl-dev \
-	libicu-dev \
-	nodejs \
-    npm \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
-    && docker-php-ext-install pdo pdo_pgsql pgsql mbstring zip intl	
+    unzip \
+    zip \
+    && docker-php-ext-install opcache
 
-# Install Composer
+# Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy application files
-COPY . /var/www
+# Копираме проекта
+COPY . .
 
-# Set correct permissions
-RUN chown -R www-data:www-data /var/www
+# Инсталираме PHP зависимостите
+RUN composer install --no-dev --optimize-autoloader
 
-# Install PHP dependencies
-RUN composer install --optimize-autoloader --no-scripts
-
-# Install JS dependencies
-RUN npm install
-
-# Railway provides PORT dynamically
+# Railway използва този порт
 ENV PORT=8080
-
-# Expose the correct port
 EXPOSE 8080
 
-# Start PHP built-in server
+# Стартираме Symfony (public/index.php)
 CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
