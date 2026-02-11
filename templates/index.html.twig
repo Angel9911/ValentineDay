@@ -1,0 +1,278 @@
+{% block content %}
+    <html lang="bg">
+    <head>
+        <meta charset="UTF-8">
+        <title>Mein Schatz 💖</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+            body {
+                margin: 0;
+                height: 100vh;
+                background: linear-gradient(180deg, #ff758c, #ff7eb3);
+                font-family: 'Segoe UI', sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+            }
+
+            /* ---------- QUESTION ---------- */
+            #question {
+                text-align: center;
+                color: white;
+            }
+
+            #question h1 {
+                font-size: 32px;
+                margin-bottom: 30px;
+            }
+
+            button {
+                font-size: 22px;
+                padding: 14px 30px;
+                border: none;
+                border-radius: 14px;
+            }
+
+            #yesBtn {
+                background: #4CAF50;
+                color: white;
+            }
+
+            #noBtn {
+                background: #f44336;
+                color: white;
+                position: absolute;
+                transition: transform 0.25s ease;
+            }
+
+            /* ---------- THANK YOU CARD ---------- */
+            #thankYou {
+                display: none;
+                position: relative;
+
+                width: 94%;
+                max-width: 420px;        /* ⬅️ по-широк */
+                min-height: 520px;       /* ⬅️ по-висок */
+
+                background: rgba(255,255,255,0.96);
+                border-radius: 28px;
+                padding: 28px 22px;
+
+                text-align: center;
+                animation: showCard 0.9s ease forwards;
+            }
+
+            .love-row {
+                margin-top: 22px;
+            }
+
+            .love-text {
+                font-size: clamp(16px, 4.2vw, 19px);
+                font-style: italic;
+                font-weight: 500;
+                color: #ff4d6d;
+                opacity: 0.95;
+
+                margin-bottom: 6px;
+            }
+
+            .love-signature {
+                font-size: clamp(15px, 4vw, 18px);
+                font-style: italic;
+                font-weight: 500;
+                color: #ff4d6d;
+
+                text-align: right;   /* 🔑 ВИНАГИ ВДЯСНО */
+            }
+
+            .love-signature span {
+                font-size: 1.1em;
+            }
+            @keyframes fadeInSignature {
+                from {
+                    opacity: 0;
+                    transform: translateY(6px);
+                }
+                to {
+                    opacity: 0.9;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes showCard {
+                from { transform: scale(0.8); opacity: 0; }
+                to { transform: scale(1); opacity: 1; }
+            }
+
+            #thankYou h1 {
+                font-size: 34px;
+                color: #ff4d6d;
+            }
+
+            #thankYou p {
+                font-size: 20px;
+                color: #444;
+                margin-bottom: 20px;
+            }
+
+            /* ---------- SLIDESHOW ---------- */
+            .slideshow {
+                width: 100%;
+                height: min(60vh, 340px);/* height: 300px;   */        /* ⬅️ по-висок */
+                margin-top: 15px;
+
+                position: relative;
+                overflow: hidden;
+                border-radius: 22px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .slideshow img {
+                position: absolute;
+                inset: 0;
+
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* 🔑 показва цялата снимка */
+
+                opacity: 0;
+                animation: slide 15s infinite ease-in-out;
+            }
+
+            .slideshow img:nth-child(1) { animation-delay: 0s; }
+            .slideshow img:nth-child(2) { animation-delay: 4s; }
+            .slideshow img:nth-child(3) { animation-delay: 8s; }
+            .slideshow img:nth-child(4) { animation-delay: 12s; }
+            .slideshow img:nth-child(5) { animation-delay: 16s; }
+
+            @keyframes slide {
+                0% { opacity: 0; }
+                10% { opacity: 1; }
+                30% { opacity: 1; }
+                40% { opacity: 0; }
+                100% { opacity: 0; }
+            }
+
+            /* ---------- FALLING HEARTS ---------- */
+            .heart {
+                position: absolute;
+                color: rgba(255, 0, 90, 0.4);
+                font-size: 26px;
+
+                animation: fall linear infinite;
+                pointer-events: none;
+            }
+
+            @keyframes fall {
+                from { transform: translateY(-10vh); }
+                to { transform: translateY(110vh); }
+            }
+        </style>
+    </head>
+
+    <body>
+
+    <div id="question">
+        <h1>💘 Ще бъдеш ли моята валентинка? 💘</h1>
+        <button id="yesBtn">Да 💖</button>
+        <button id="noBtn">Не 💔</button>
+    </div>
+
+    <div id="thankYou">
+        <h1>Mein Schatz 💕</h1>
+        <p>Благодаря ти, че направи този ден специален 🥰</p>
+
+        <div class="slideshow">
+            <img src="/assets/images/image_1.jpg">
+            <img src="/assets/images/image_2.jpg">
+            <img src="/assets/images/image_3.jpg">
+            <img src="/assets/images/image_4.jpg">
+            <img src="/assets/images/image_5.jpg">
+        </div>
+
+        <div class="love-row">
+            <div class="love-text">
+                Най-хубавото нещо на света си ти.
+            </div>
+
+            <div class="love-signature">
+                Обичам те 12.09.25 <span>❤️</span>
+            </div>
+        </div>
+    </div>
+    <audio id="music" preload="auto">
+        <source src="/assets/audio/angel-numbers_1.mp3" type="audio/mpeg">
+        Вашият браузър не поддържа аудио.
+    </audio>
+
+    <script>
+        const noBtn = document.getElementById("noBtn");
+        const yesBtn = document.getElementById("yesBtn");
+        const question = document.getElementById("question");
+        const thankYou = document.getElementById("thankYou");
+        const music = document.getElementById("music");
+
+        let moveX = 0;
+        let moveY = 0;
+
+        function moveNo() {
+            const directions = [
+                { x: -30, y: 0 },  // леко вляво
+                { x: 30, y: 0 },   // леко вдясно
+                { x: 0, y: -30 },  // леко нагоре
+                { x: 0, y: 30 }    // леко надолу
+            ];
+
+            const random = directions[Math.floor(Math.random() * directions.length)];
+
+            moveX += random.x;
+            moveY += random.y;
+
+            // Ограничаваме да не излезе извън екрана
+            moveX = Math.max(-120, Math.min(120, moveX));
+            moveY = Math.max(-120, Math.min(120, moveY));
+
+            noBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        }
+
+        noBtn.addEventListener("click", moveNo);
+        noBtn.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            moveNo();
+        });
+
+        yesBtn.addEventListener("click", () => {
+            question.style.display = "none";
+            thankYou.style.display = "block";
+            music.play();
+            createHearts();
+        });
+
+        function createHearts() {
+
+            const heartInterval = setInterval(() => {
+                for (let i = 0; i < 3; i++) {   // ⬅️ повече сърца наведнъж
+                    const heart = document.createElement("div");
+                    heart.className = "heart";
+                    heart.innerHTML = "❤";
+
+                    heart.style.left = Math.random() * 100 + "vw";
+                    heart.style.fontSize = (18 + Math.random() * 18) + "px";
+                    heart.style.animationDuration = (6 + Math.random() * 6) + "s";
+
+                    document.body.appendChild(heart);
+
+                    setTimeout(() => heart.remove(), 12000);
+                }
+            }, 700); // ⬅️ появяват се постоянно
+        }
+    </script>
+
+    </body>
+    </html>
+{% endblock %}
