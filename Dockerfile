@@ -1,17 +1,46 @@
-# Use PHP 8.2
-FROM php:8.2-cli
+# Use PHP 8.1 with FPM
+FROM php:8.2-fpm
 
 # Set working directory
-WORKDIR /app
+WORKDIR /var/www
 
-# Copy project files
-COPY . .
+# Install necessary PHP extensions
+RUN apt-get update && apt-get install -y \
+    curl \
+    zip \
+    unzip \
+    git \
+    libpq-dev \
+    libonig-dev \
+    libzip-dev \
+    libssl-dev \
+	libicu-dev \
+	nodejs \
+    npm \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && docker-php-ext-install pdo pdo_pgsql pgsql mbstring zip intl	
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copy application files
+COPY . /var/www
+
+# Set correct permissions
+RUN chown -R www-data:www-data /var/www
+
+# Install PHP dependencies
+RUN composer install --optimize-autoloader --no-scripts
+
+# Install JS dependencies
+RUN npm install
 
 # Railway provides PORT dynamically
 ENV PORT=8080
 
-# Expose port (Railway ignores this, но е добра практика)
+# Expose the correct port
 EXPOSE 8080
 
 # Start PHP built-in server
-CMD ["sh", "-c", "php -S 0.0.0.0:${PORT} -t ."]
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
