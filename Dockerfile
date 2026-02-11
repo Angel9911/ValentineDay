@@ -24,4 +24,4 @@ ENV PORT=8080
 EXPOSE 8080
 
 # Стартираме Symfony (public/index.php)
-CMD ["php", "-S", "0.0.0.0:8080", "public/router.php"]
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
